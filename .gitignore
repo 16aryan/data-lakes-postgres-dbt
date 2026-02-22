@@ -134,9 +134,6 @@ dmypy.json
 # Jupyter Lab
 .jupyterlab-debug.log
 
-# VS Code
-.vscode/
-
 # Spark
 spark-warehouse/
 
@@ -182,7 +179,6 @@ dbt_modules/
 Thumbs.db
 
 # IDE-specific files (e.g., for VSCode or PyCharm)
-.vscode/
 .idea/
 *.swp
 *.swo
