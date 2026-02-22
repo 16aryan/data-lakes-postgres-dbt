@@ -1,16 +1,13 @@
 silver:
   outputs:
     dev:
-      dremio_space: lakehouse
-      dremio_space_folder: silver
-      object_storage_source: catalog
-      object_storage_path: silver
-      password: "{{ env_var('DREMIO_PASSWORD') }}"
-      port: 9047
-      software_host: 127.0.0.1
+      type: postgres
+      host: localhost
+      port: 5432
+      user: postgres
+      password: password
+      dbname: lakehouse
+      schema: bronze
       threads: 1
-      type: dremio
-      use_ssl: false
-      user: "{{ env_var('DREMIO_USER') }}"
   target: dev
     

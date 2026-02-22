@@ -8,8 +8,8 @@ WITH source_data AS (
         energy_consumed_kWh,
         charging_rate,
         cost,
-        TO_TIMESTAMP(start_time, 'MM/DD/YYYY HH24:MI:SS') AS start_time,
-        TO_TIMESTAMP(end_time, 'MM/DD/YYYY HH24:MI:SS') AS end_time
+        CAST(start_time AS TIMESTAMP) AS start_time,
+        CAST(end_time AS TIMESTAMP) AS end_time
     FROM {{ source("chargenet_bronze", "charging_sessions") }}
 )
 

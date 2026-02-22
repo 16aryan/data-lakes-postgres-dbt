@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: ecoride_bronze
-    database: catalog
-    schema: bronze.ecoride
+    database: lakehouse
+    schema: bronze
     tables:
       - name: customers
       - name: sales
@@ -11,14 +11,14 @@ sources:
       - name: product_reviews
 
   - name: chargenet_bronze
-    database: catalog
-    schema: bronze.chargenet
+    database: lakehouse
+    schema: bronze
     tables:
       - name: charging_sessions
       - name: stations
 
   - name: vehicle_health_bronze
-    database: catalog
-    schema: bronze.vehicle_health
+    database: lakehouse
+    schema: bronze
     tables:
       - name: logs

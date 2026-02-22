@@ -7,6 +7,6 @@ SELECT
     SUM(s.sale_price) as total_spent,
     COUNT(s.id) as total_transactions,
     AVG(s.sale_price) as average_transaction_value
-FROM {{ source('silver', 'customers') }} AT branch {{ nessie_branch }} c
-LEFT JOIN {{ source('silver', 'sales') }} AT branch {{ nessie_branch }} s ON c.id = s.customer_id
+FROM {{ source('silver', 'customers') }} c
+LEFT JOIN {{ source('silver', 'sales') }} s ON c.id = s.customer_id
 GROUP BY c.id, c.first_name, c.email

@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: silver
-    database: catalog
-    schema: silver
+    database: lakehouse
+    schema: bronze
     tables:
       - name: customers
         meta:

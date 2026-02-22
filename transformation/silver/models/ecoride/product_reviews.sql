@@ -2,12 +2,12 @@
 
 WITH formatted_reviews AS (
     SELECT
-        CustomerID,
-        CAST("Date" as DATE) as ReviewDate,
-        Rating,
-        ReviewID,
-        TRIM(ReviewText) as ReviewText, -- Removes leading and trailing spaces
-        VehicleModel
+        customerid,
+        CAST(reviewdate as DATE) as ReviewDate,
+        rating,
+        reviewid,
+        TRIM(reviewtext) as ReviewText, -- Removes leading and trailing spaces
+        vehiclemodel
     FROM {{ source("ecoride_bronze", "product_reviews") }}
 )
 

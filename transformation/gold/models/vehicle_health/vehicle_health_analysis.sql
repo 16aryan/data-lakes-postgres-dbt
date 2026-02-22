@@ -6,4 +6,4 @@ SELECT
     ManufacturingYear,
     Alerts,
     MaintenanceHistory
-FROM {{ source('silver', 'vehicle_health_logs') }} AT branch {{ nessie_branch }}
+FROM {{ source('silver', 'vehicle_health_logs') }}
