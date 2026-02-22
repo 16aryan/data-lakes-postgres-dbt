@@ -1,4 +1,4 @@
-pyspark==3.3.0
+pyspark==4.1.1
 python-dotenv
 dbt-dremio
 dagster
