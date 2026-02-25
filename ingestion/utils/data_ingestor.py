@@ -5,6 +5,22 @@ class DataIngestor:
     def __init__(self, spark: SparkSession):
         self.spark = spark
 
+    def create_or_replace_iceberg_table(self, df, layer, business_entity, table_name):
+        schema = df.schema
+        schema_sql = ", ".join([f"{field.name} {field.dataType.simpleString()}" for field in schema.fields])
+        create_table_sql = (
+            f"CREATE OR REPLACE TABLE nessie.{layer}.{business_entity}.{table_name} "
+            f"({schema_sql}) USING iceberg"
+        )
+
+        try:
+            self.spark.sql(f"CREATE NAMESPACE IF NOT EXISTS nessie.{layer};")
+            self.spark.sql(f"CREATE NAMESPACE IF NOT EXISTS nessie.{layer}.{business_entity};")
+            self.spark.sql(f"DROP TABLE IF EXISTS nessie.{layer}.{business_entity}.{table_name};")
+            self.spark.sql(create_table_sql)
+        except Exception as e:
+            raise e
+
     def ingest_file_to_bronze(self, file_path: str, business_entity: str, table_name: str, file_type: str, partition_by=None):
         try:
             if file_type == 'csv':
@@ -14,16 +30,14 @@ class DataIngestor:
             else:
                 raise ValueError(f"Unsupported file type '{file_type}'. Supported types: csv, json")
 
-            # For now, just show the data and schema to verify ingestion works
-            print(f"\n=== Ingesting {business_entity}.{table_name} from {file_path} ===")
-            print(f"Schema for {table_name}:")
-            df.printSchema()
-            print(f"Row count: {df.count()}")
-            print("Sample data:")
-            df.show(5, truncate=False)
-            print("=" * 50)
+            full_table_path = f"nessie.bronze.{business_entity}.{table_name}"
 
-            logging.info(f"Data ingested successfully from {file_path} to Spark DataFrame for {business_entity}.{table_name}")
+            self.create_or_replace_iceberg_table(df, "bronze", business_entity, table_name)
+
+            if partition_by:
+                df.write.format("iceberg").partitionBy(partition_by).mode("overwrite").save(full_table_path)
+            else:
+                df.write.format("iceberg").mode("overwrite").save(full_table_path)
 
         except Exception as e:
             logging.error(f"Error in ingesting file to DataFrame: {e}")
