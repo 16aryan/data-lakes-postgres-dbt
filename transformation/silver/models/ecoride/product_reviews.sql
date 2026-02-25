@@ -2,9 +2,9 @@
 
 WITH formatted_reviews AS (
     SELECT
-        customerid,
+        CAST(customerid AS INTEGER) AS customerid,
         CAST(reviewdate as DATE) as ReviewDate,
-        rating,
+        CAST(rating AS NUMERIC) AS rating,
         reviewid,
         TRIM(reviewtext) as ReviewText, -- Removes leading and trailing spaces
         vehiclemodel

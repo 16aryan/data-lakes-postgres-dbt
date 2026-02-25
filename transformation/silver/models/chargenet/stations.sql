@@ -1,11 +1,11 @@
 {{ config( twin_strategy="allow", materialized="table" ) }}
 
 SELECT
-    id,
+    CAST(id AS INTEGER) AS id,
     address,
     city,
     country,
-    number_of_chargers,
+    CAST(number_of_chargers AS INTEGER) AS number_of_chargers,
     operational_status,
     state,
     station_type

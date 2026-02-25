@@ -1,9 +1,9 @@
 {{ config( twin_strategy="allow", materialized="table" ) }}
 
 SELECT
-    id,
+    CAST(id AS INTEGER) AS id,
     model_name,
     model_type,
     color,
-    "year"
+    CAST("year" AS INTEGER) AS "year"
 FROM {{ source("ecoride_bronze", "vehicles") }}

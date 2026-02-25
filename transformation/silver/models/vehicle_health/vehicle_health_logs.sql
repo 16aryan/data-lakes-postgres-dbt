@@ -1,9 +1,9 @@
 {{ config( twin_strategy="allow", materialized="table" ) }}
 
 SELECT
-    VehicleID,
+    CAST(VehicleID AS TEXT) AS VehicleID,
     Model,
-    ManufacturingYear,
+    CAST(ManufacturingYear AS INTEGER) AS ManufacturingYear,
     Alerts,
     MaintenanceHistory
 FROM {{ source("vehicle_health_bronze", "logs") }}
