@@ -1,7 +1,10 @@
-langchain
-langchain-community
-unstructured
-chromadb
-boto3
-pypdf
-opencv-python-headless
+langchain==0.1.13
+langchain-community==0.0.29
+langchain-text-splitters==0.0.1
+langchain-ollama==0.1.1
+unstructured==0.12.13
+chromadb==0.5.0
+boto3==1.42.56
+pypdf==4.0.1
+opencv-python-headless==4.9.0.80
+pysqlite3-binary==1.7.1.2

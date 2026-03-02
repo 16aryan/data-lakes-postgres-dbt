@@ -1,9 +1,22 @@
-pyspark==3.3.0
-python-dotenv
-dbt-dremio
-dbt-postgres
-dagster
-dagster-cloud
-dagster-dbt
-dagster-webserver
-boto3
+pyspark==4.1.1
+python-dotenv==1.2.1
+dbt-dremio==1.10.0
+dbt-core==1.11.6
+dagster==1.12.15
+dagster-cloud==1.12.15
+dagster-dbt==0.28.15
+dagster-webserver==1.12.15
+boto3==1.42.56
+
+# RAG module dependencies
+langchain==0.1.13
+langchain-community==0.0.29
+langchain-text-splitters==0.0.1
+langchain-ollama==0.1.1
+chromadb==0.5.0
+pysqlite3-binary==1.7.1.2
+
+# Additional dependencies
+iceberg-spark-runtime==1.3.1
+nessie-spark-extensions==0.67.0
+awssdk-bundle==2.17.178
