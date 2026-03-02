@@ -1,13 +1,14 @@
 silver:
   outputs:
     dev:
-      type: postgres
-      host: localhost
-      port: 5432
-      user: postgres
-      password: password
-      dbname: lakehouse
-      schema: bronze
+      type: dremio
       threads: 1
+      software_host: localhost
+      port: 9047
+      user: dremio
+      password: dremio123
+      use_ssl: false
+      dremio_space: Nessie
+      dremio_space_folder: silver
   target: dev
     

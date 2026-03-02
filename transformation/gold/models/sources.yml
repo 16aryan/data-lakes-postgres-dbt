@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: silver
-    database: lakehouse
-    schema: bronze
+    database: Nessie
+    schema: silver
     tables:
       - name: customers
         meta:

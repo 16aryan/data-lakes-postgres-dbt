@@ -1,7 +1,7 @@
 {{ config( twin_strategy="allow", materialized="table" ) }}
 
 SELECT
-    CAST(VehicleID AS TEXT) AS VehicleID,
+    CAST(VehicleID AS VARCHAR) AS VehicleID,
     Model,
     CAST(ManufacturingYear AS INTEGER) AS ManufacturingYear,
     Alerts,

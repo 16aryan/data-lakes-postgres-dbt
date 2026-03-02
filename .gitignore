@@ -199,3 +199,4 @@ dist/
 
 # Superset
 superset.db
+.tmp_dagster_home*

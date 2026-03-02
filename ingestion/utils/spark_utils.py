@@ -5,6 +5,24 @@ import os
 load_dotenv(os.path.join(os.path.dirname(__file__), "../..", ".env"))
 
 def create_spark_session():
+    java_options = (
+        "--add-opens java.base/java.lang=ALL-UNNAMED "
+        "--add-opens java.base/java.lang.invoke=ALL-UNNAMED "
+        "--add-opens java.base/java.lang.reflect=ALL-UNNAMED "
+        "--add-opens java.base/java.io=ALL-UNNAMED "
+        "--add-opens java.base/java.net=ALL-UNNAMED "
+        "--add-opens java.base/java.nio=ALL-UNNAMED "
+        "--add-opens java.base/java.util=ALL-UNNAMED "
+        "--add-opens java.base/java.util.concurrent=ALL-UNNAMED "
+        "--add-opens java.base/java.util.concurrent.atomic=ALL-UNNAMED "
+        "--add-opens java.base/jdk.internal.ref=ALL-UNNAMED "
+        "--add-opens java.base/sun.nio.ch=ALL-UNNAMED "
+        "--add-opens java.base/sun.nio.cs=ALL-UNNAMED "
+        "--add-opens java.base/sun.security.action=ALL-UNNAMED "
+        "--add-opens java.base/sun.util.calendar=ALL-UNNAMED "
+        "--add-opens java.security.jgss/sun.security.krb5=ALL-UNNAMED"
+    )
+    
     return SparkSession.builder \
         .appName("Data Ingestion to Bronze with Iceberg") \
         .config(
@@ -19,6 +37,8 @@ def create_spark_session():
             "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,"
             "org.projectnessie.spark.extensions.NessieSparkSessionExtensions",
         ) \
+        .config("spark.driver.extraJavaOptions", java_options) \
+        .config("spark.executor.extraJavaOptions", java_options) \
         .config("spark.sql.catalog.nessie", "org.apache.iceberg.spark.SparkCatalog") \
         .config("spark.sql.catalog.nessie.uri", "http://localhost:19120/api/v1") \
         .config("spark.sql.catalog.nessie.ref", "main") \
