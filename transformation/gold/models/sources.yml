@@ -2,34 +2,9 @@ version: 2
 
 sources:
   - name: silver
-    database: Nessie
     schema: silver
     tables:
       - name: customers
-        meta:
-          dagster:
-            asset_key: ["customers"]
       - name: sales
-        meta:
-          dagster:
-            asset_key: ["sales"]
       - name: vehicles
-        meta:
-          dagster:
-            asset_key: ["vehicles"]
       - name: product_reviews
-        meta:
-          dagster:
-            asset_key: ["product_reviews"]
-      - name: charging_sessions
-        meta:
-          dagster:
-            asset_key: ["charging_sessions"]
-      - name: stations
-        meta:
-          dagster:
-            asset_key: ["stations"]
-      - name: vehicle_health_logs
-        meta:
-          dagster:
-            asset_key: ["vehicle_health_logs"]

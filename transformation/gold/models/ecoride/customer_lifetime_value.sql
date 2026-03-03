@@ -1,12 +1,10 @@
-{% set nessie_branch = var('nessie_branch', 'main') %}
-
 SELECT
-    c.id as customer_id,
-    c.first_name,
+    c.customer_id,
+    c.name,
     c.email,
-    SUM(s.sale_price) as total_spent,
-    COUNT(s.id) as total_transactions,
-    AVG(s.sale_price) as average_transaction_value
+    SUM(s.amount) as total_spent,
+    COUNT(s.sales_id) as total_transactions,
+    AVG(s.amount) as average_transaction_value
 FROM {{ source('silver', 'customers') }} c
-LEFT JOIN {{ source('silver', 'sales') }} s ON c.id = s.customer_id
-GROUP BY c.id, c.first_name, c.email
+LEFT JOIN {{ source('silver', 'sales') }} s ON c.customer_id = s.customer_id
+GROUP BY c.customer_id, c.name, c.email
