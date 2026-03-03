@@ -1,13 +1,13 @@
 gold:
   outputs:
     dev:
-      type: dremio
-      threads: 1
-      software_host: localhost
-      port: 9047
-      user: dremio
-      password: dremio123
-      use_ssl: false
-      dremio_space: Nessie
-      dremio_space_folder: gold
+      type: postgres
+      threads: 4
+      host: localhost
+      port: 5432
+      user: postgres
+      password: postgres
+      dbname: lakehouse
+      schema: gold
+      keepalives_idle: 0
   target: dev
