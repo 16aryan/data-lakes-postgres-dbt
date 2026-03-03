@@ -1,11 +1,9 @@
 {{ config( twin_strategy="allow", materialized="table" ) }}
 
 SELECT
-    CAST(id AS INTEGER) AS id,
-    first_name,
-    -- Assuming email is important and retained
+    CAST(customer_id AS INTEGER) AS customer_id,
+    name,
     email,
     city,
-    "state",
-    country
+    state
 FROM {{ source("ecoride_bronze", "customers") }}

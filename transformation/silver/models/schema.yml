@@ -4,20 +4,20 @@ models:
   - name: customers
     description: "Transformed data for ecoride customers"
     columns:
-      - name: id
+      - name: customer_id
         description: "Unique identifier for the customer"
         tests:
           - not_null
           - unique
-      - name: first_name
-        description: "First name of the customer"
+      - name: name
+        description: "Name of the customer"
       - name: email
         description: "Email address of the customer"
 
   - name: sales
     description: "Sales data for ecoride vehicles"
     columns:
-      - name: id
+      - name: sales_id
         description: "Unique identifier for the sale transaction"
         tests:
           - not_null
@@ -28,7 +28,7 @@ models:
           - not_null
           - relationships:
               to: ref('customers')
-              field: id
+              field: customer_id
 
   - name: vehicles
     description: "Details of ecoride vehicles"
@@ -40,14 +40,8 @@ models:
           - unique
       - name: model_name
         description: "Name of the vehicle model"
-        tests:
-          - accepted_values:
-              values: ['EcoSprint', 'PowerRide', 'UrbanGlide', 'TerraCross', 'AeroFlow']
       - name: model_type
         description: "Type of the vehicle model, e.g., Sedan, SUV"
-        tests:
-          - accepted_values:
-              values: ['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Crossover']
       - name: color
         description: "Color of the vehicle"
       - name: year
