@@ -85,8 +85,10 @@ services:
       - "8088:8088"
     environment:
       SUPERSET_WEBSERVER_PORT: 8088
-      SUPERSET_ADMIN_PASSWORD: admin
-      SUPERSET_SECRET_KEY: xxxxx
+      SUPERSET_ADMIN_USER: ${SUPERSET_ADMIN_USER:-admin}
+      SUPERSET_ADMIN_PASSWORD: ${SUPERSET_ADMIN_PASSWORD:-admin}
+      SUPERSET_ADMIN_EMAIL: ${SUPERSET_ADMIN_EMAIL:-admin@example.com}
+      SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY:-supersecretkey}
     volumes:
       - ./superset:/app/superset_home
       - ./superset-init.sh:/app/superset-init.sh
@@ -98,6 +100,10 @@ services:
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8088/health" ]
       interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - lakehousenet
       timeout: 10s
       retries: 3
     networks:
