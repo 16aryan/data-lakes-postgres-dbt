@@ -104,10 +104,6 @@ services:
       retries: 3
     networks:
       - lakehousenet
-      timeout: 10s
-      retries: 3
-    networks:
-      - lakehousenet
 
   jupyterlab:
     image: jupyter/datascience-notebook:latest
