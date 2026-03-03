@@ -173,6 +173,11 @@ venv/
 # DBT files
 dbt_modules/
 /target/
+target/
+dbt_packages/
+transformation/*/target/
+transformation/*/logs/
+transformation/*/dbt_packages/
 
 # System files
 .DS_Store
