@@ -1,17 +1,50 @@
 version: "3.9"
 
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lakehouse
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lakehousenet
+
   dremio:
     platform: linux/x86_64
     image: dremio/dremio-oss:latest
+    restart: always
     ports:
       - 9047:9047
       - 31010:31010
       - 32010:32010
     container_name: dremio
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9047/api/v3/config" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - lakehousenet
 
   minioserver:
     image: minio/minio
+    restart: always
     ports:
       - 9000:9000
       - 9001:9001
@@ -20,15 +53,33 @@ services:
       MINIO_ROOT_PASSWORD: minioadmin
     container_name: minio
     command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - lakehousenet
 
   nessie:
     image: projectnessie/nessie
+    restart: always
     container_name: nessie
     ports:
       - "19120:19120"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:19120/api/v1/config" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - lakehousenet
 
   superset:
     image: apache/superset
+    restart: always
     container_name: superset
     ports:
       - "8088:8088"
@@ -41,9 +92,20 @@ services:
       - ./superset-init.sh:/app/superset-init.sh
     entrypoint: /app/superset-init.sh
     user: root
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8088/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - lakehousenet
 
   jupyterlab:
     image: jupyter/datascience-notebook:latest
+    restart: always
     container_name: jupyterlab
     ports:
       - "8888:8888"
@@ -53,29 +115,17 @@ services:
       JUPYTER_ENABLE_LAB: "yes"
       GRANT_SUDO: "yes"
     command: start-notebook.sh --NotebookApp.token=''
-
-  postgres:
-    image: postgres:15-alpine
-    container_name: postgres
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: lakehouse
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - lakehousenet
 
 volumes:
   postgres_data:
+  minio_data:
 
 
 networks:
-  default:
-    name: lakehousenet
+  lakehousenet:
     driver: bridge

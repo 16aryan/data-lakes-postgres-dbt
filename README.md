@@ -42,45 +42,88 @@ The project implements a lakehouse architecture with:
 ### Prerequisites
 - Docker and Docker Compose
 - Python 3.11
-- Java 17
 - VS Code (recommended)
 
-### Setup
+### Option 1: Automatic Setup (Recommended)
 
-1. **Clone and setup environment:**
+Run the complete setup script that handles everything automatically:
+
 ```bash
-git clone https://github.com/16aryan/data-lakes-postgres-dbt.git
-cd data-lakes-postgres-dbt
+# Make sure you're in the project directory
+cd complete-guide-to-data-lakes-and-lakehouses-with-ai
+chmod +x setup.sh
+./setup.sh
+```
+
+This script will:
+1. ✅ Start all Docker containers (automatically restarting on failure)
+2. ✅ Wait for all services to be healthy
+3. ✅ Load bronze layer data from CSV files
+4. ✅ Run silver layer dbt transformations
+5. ✅ Run gold layer dbt transformations
+6. ✅ Provide a summary of available services
+
+**All containers are configured to automatically restart on failure** - no manual intervention needed!
+
+### Option 2: Manual Setup
+
+If you prefer manual control:
+
+```bash
+# 1. Setup Python environment
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-```
 
-2. **Start infrastructure:**
-```bash
+# 2. Start all Docker containers (they auto-restart on failure)
 docker-compose up -d
+
+# 3. Load bronze data
+python3 load_bronze_data.py
+
+# 4. Run transformations
+cd transformation/silver && dbt run --project-dir .
+cd ../gold && dbt run --project-dir .
 ```
 
-3. **Configure environment:**
-```bash
-export JAVA_HOME=/opt/homebrew/opt/openjdk@17
-export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
-```
+### Docker Container Auto-Restart
 
-4. **Load data and run transformations:**
-```bash
-# Load bronze layer data
-python -c "from ingestion.utils.data_loader import DataLoader; DataLoader().load_all_data()"
+All Docker containers are configured with `restart: always` policy:
 
-# Run dbt transformations
-cd transformation/silver && dbt run
-cd ../gold && dbt run
-```
+| Service | Port | Auto-Restart |
+|---------|------|--------------|
+| PostgreSQL | 5432 | ✅ |
+| Dremio | 9047 | ✅ |
+| MinIO | 9000-9001 | ✅ |
+| Nessie | 19120 | ✅ |
+| Superset | 8088 | ✅ |
+| JupyterLab | 8888 | ✅ |
 
-5. **Test Spark ingestion:**
+### Error Handling
+
+The system is designed to never fail completely:
+
+1. **Graceful Error Handling**: All data loading and transformation scripts continue on errors
+2. **Service Health Checks**: Docker containers monitor service health and auto-restart
+3. **Dependency Management**: Services wait for dependencies before starting
+4. **Automatic Initialization**: PostgreSQL schemas are created automatically on startup
+
+### Monitoring
+
+Check service status:
 ```bash
-python -m ingestion.bronze.ecoride_ingest
-python -m ingestion.bronze.vehicle_health_ingest
+# View all container status
+docker-compose ps
+
+# View logs for a specific service
+docker-compose logs -f postgres
+docker-compose logs -f dremio
+
+# Stop all services
+docker-compose down
+
+# Stop and remove all data
+docker-compose down -v
 ```
 
 ## Data Sources
